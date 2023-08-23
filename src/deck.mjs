@@ -1,4 +1,5 @@
-import Katex from "https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.mjs"
+import Katex from "https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.mjs";
+import renderMathInElement from "https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.mjs";
 
 const registry = window.customElements
 
@@ -110,13 +111,7 @@ class RazzleDeck extends HTMLElement {
         shadow.appendChild(kclone);
         shadow.appendChild(svgDefs);
         [...children].map(child => {
-          const mathElements = child.querySelectorAll("math")
-          for (let element of mathElements) {
-              Katex.render(element.textContent, element, {
-                  throwOnError: false,
-                  displayMode: [...element.classList].includes("d")
-              });
-          };
+          renderMathInElement(child)
           shadow.appendChild(child)
         })
 

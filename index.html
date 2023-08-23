@@ -22,17 +22,17 @@
             </razzle-slide>
             <razzle-slide>
                 <h3>Motivating example: non-determinism</h3>
-                <p>If <math>Σ</math> are some states, <math>⟦C⟧:Σ→ 𝒫(Σ)</math> is the action of the non-deterministic program <math>C</math> on those states, and <math>σ,τ : Σ</math> and <math>P,Q⊆Σ</math> then:
+                <p>If \(Σ\) are some states, \(⟦C⟧:Σ→ 𝒫(Σ)\) is the action of the non-deterministic program \(C\) on those states, and \(σ,τ : Σ\) and \(P,Q⊆Σ\) then:
                 <dl>
                     <dt>Hoare Logic:</dt>
-                    <dd style="padding-top:1em"><math>⊨ \{P\}C\{Q\}</math> 
+                    <dd style="padding-top:1em">\(⊨ \{P\}C\{Q\}\) 
                         <span style="padding-left:1em;padding-right:1em;">iff</span>
-                        <math>∀σ∈P, ∀τ∈ ⟦C⟧(σ), τ ∈ Q</math>
+                        \(∀σ∈P, ∀τ∈ ⟦C⟧(σ), τ ∈ Q\)
                     </dd>
                     <dt style="padding-top:1em">Incorrectness Logic:</dt>
-                    <dd style="padding-top:1em"><math>⊨ [P]C[Q]</math> 
+                    <dd style="padding-top:1em">\(⊨ [P]C[Q]\) 
                         <span style="padding-left:1em;padding-right:1em;">iff</span>
-                        <math>∀τ∈Q, ∃σ ∈ P, τ ∈ ⟦C⟧(σ)</math>
+                        \(∀τ∈Q, ∃σ ∈ P, τ ∈ ⟦C⟧(σ)\)
                     </dd>
                 </dl>
             </razzle-slide>
@@ -40,29 +40,29 @@
                <h3>Hoare Logic:</h3>
                <svg viewBox="0 0 400 250">
                    <path d="M50 50 V 200" stroke="black" stroke-width="3" fill="none" />
-                   <foreignObject x="20" y="105"><math>P</math></foreignObject>
+                   <foreignObject x="20" y="105">\(P\)</foreignObject>
                    <path d="M300 10 V 250" stroke="black" stroke-width="3" fill="none" />
-                   <foreignObject x="310" y="105"><math>Q</math></foreignObject>
+                   <foreignObject x="310" y="105">\(Q\)</foreignObject>
                    <path d="M275 50 V 200" stroke-dasharray="5" stroke="black" stroke-width="3" fill="none" />
-                   <foreignObject x="150" y="105"><math>⟦C⟧^\dagger(P)</math></foreignObject>
+                   <foreignObject x="150" y="105">\(⟦C⟧^\dagger(P)\)</foreignObject>
                    <path d="M50 50 L255 50" stroke-dasharray="5" stroke="black" stroke-width="1" fill="none" marker-end="url(#arrowhead)"/>
                    <path d="M50 200 L255 200" stroke-dasharray="5" stroke="black" stroke-width="1" fill="none"marker-end="url(#arrowhead)"/>
                </svg>
-               <p>Postcondition <math>Q</math> “over-approximates” <math>⟦C⟧^\dagger(P)</math>, it's allowed to include some unreachable outcomes.</p> 
+               <p>Postcondition \(Q\) “over-approximates” \(⟦C⟧^\dagger(P)\), it's allowed to include some unreachable outcomes.</p> 
             </razzle-slide>
             <razzle-slide>
                <h3>Incorrectness Logic:</h3>
                <svg viewBox="0 0 400 250" >
                    <path d="M50 50 V 200" stroke="black" stroke-width="3" fill="none" />
-                   <foreignObject x="20" y="105"><math>P</math></foreignObject>
+                   <foreignObject x="20" y="105">\(P\)</foreignObject>
                    <path d="M300 50 V 200" stroke="black" stroke-width="3" fill="none" />
-                   <foreignObject x="310" y="105"><math>Q</math></foreignObject>
+                   <foreignObject x="310" y="105">\(Q\)</foreignObject>
                    <path d="M275 10 V 250" stroke-dasharray="5" stroke="black" stroke-width="3" fill="none" />
-                   <foreignObject x="150" y="105"><math>⟦C⟧^\dagger(P)</math></foreignObject>
+                   <foreignObject x="150" y="105">\(⟦C⟧^\dagger(P)\)</foreignObject>
                    <path d="M50 50 L255 10" stroke-dasharray="5" stroke="black" stroke-width="1" fill="none" marker-end="url(#arrowhead)"/>
                    <path d="M50 200 L255 240" stroke-dasharray="5" stroke="black" stroke-width="1" fill="none"marker-end="url(#arrowhead)"/>
                </svg>
-               <p>Postcondition “under-approximates” <math>⟦C⟧^\dagger(P)</math>, it's allowed to leave out some reachable outcomes</p>
+               <p>Postcondition “under-approximates” \(⟦C⟧^\dagger(P)\), it's allowed to leave out some reachable outcomes</p>
             </razzle-slide>
             <razzle-slide>
                 <p>Both HL and IL combine two difference sources of outcome multiplicity:</p>
@@ -75,47 +75,47 @@
             <razzle-slide>
                 <p>Heisenbugs: “Every state in the precondition can (sometimes, nondeterministically) produce an error”</p>
                 <p>Correct Shuffles: “Each of several postconditions is (sometimes, nondeterministically) reachable from every state in the precondition”</p>
-                <p>Manifest Errors (Le et al.): “Executing <math>C</math> on any state terminates erroniously in some state satisfying…”</p>
+                <p>Manifest Errors (Le et al.): “Executing \(C\) on any state terminates erroniously in some state satisfying…”</p>
             </razzle-slide>
             <razzle-slide>
                 <h3>Idea for a solution:</h3>
-                <p>look at properties of the sets <math>⟦C⟧(x)</math> for <math>x∈ P</math>, or actually more generally, <math>⟦C⟧^\dagger(X)</math> for <math>X \subseteq P</math>.</p>
-                <p>A Heisenbug means that <math>⟦C⟧^\dagger(X)</math> overlaps error, for any choice of <math>X\subseteq P</math>.<p>
-                <p>A fair shuffle means that <math>⟦C⟧^\dagger(X)</math> covers your shuffle outcomes, for any choice of <math>X\subseteq P</math>.</p>
+                <p>look at properties of the sets \(⟦C⟧(x)\) for \(x∈ P\), or actually more generally, \(⟦C⟧^\dagger(X)\) for \(X \subseteq P\).</p>
+                <p>A Heisenbug means that \(⟦C⟧^\dagger(X)\) overlaps error, for any choice of \(X\subseteq P\).<p>
+                <p>A fair shuffle means that \(⟦C⟧^\dagger(X)\) covers your shuffle outcomes, for any choice of \(X\subseteq P\).</p>
             </razzle-slide>
             <razzle-slide>
                 <dl>
                     <dt>Generic Outcome Logic:</dt>
-                    <dd style="padding-top:1em"><math>⊨ ⟨φ⟩C⟨ψ⟩</math> 
+                    <dd style="padding-top:1em">\(⊨ ⟨φ⟩C⟨ψ⟩\) 
                         <span style="padding-left:1em;padding-right:1em;">iff</span>
-                        <math>∀S⊨φ,\qquad ⟦C⟧^\dagger(S) ⊨ ψ</math>
+                        \(∀S⊨φ,\qquad ⟦C⟧^\dagger(S) ⊨ ψ\)
                     </dd>
                 </dl>
                 <p>Because we're interested in properties of
-                <math>⟦C⟧^\dagger(X)</math>, we need to promote <math>⊨</math>
+                \(⟦C⟧^\dagger(X)\), we need to promote \(⊨\)
                 from a relation between states and assertions to a relation
                 between <em>sets of states</em> and assertions.</p>
             </razzle-slide>
             <razzle-slide>
                 <p>To do this (and get the nondeterministic outcome logic from the paper) we supply:</p>
                 <ol>
-                    <li>An execution model: basically <math>𝒫,∪,\varnothing</math> (details postponed).</li> 
-                    <li>Atomic commands <math>Σ→𝒫(Σ)</math>.</li>
-                    <li>Atomic assertions <math>\mathsf{Prop}</math>, and an
+                    <li>An execution model: basically \(𝒫,∪,\varnothing\) (details postponed).</li> 
+                    <li>Atomic commands \(Σ→𝒫(Σ)\).</li>
+                    <li>Atomic assertions \(\mathsf{Prop}\), and an
                         atomic satisfaction relation, in this case:<br>
-                        <math>S ⊨ p</math> iff <math>S ≠ \varnothing</math> and <math>∀σ∈S, σ ∈ v(p)</math>.
+                        \(S ⊨ p\) iff \(S ≠ \varnothing\) and \(∀σ∈S, σ ∈ v(p)\).
                     </li>
                 </ol>
             </razzle-slide>
             <razzle-slide>
                 Given our atomic assertions, we build an assertion language as follows:
                 </p>
-                <math>φ::= ⊤ \mid ⊥ \mid φ∧ψ \mid φ⇒ψ \mid φ\oplus ψ \mid ⊤^\oplus\mid p</math>
-                <p>and we extend satisfaction (skipping classical connectives <math>⊤,⊥,∧, ⇒</math>):</p>
+                \(φ::= ⊤ \mid ⊥ \mid φ∧ψ \mid φ⇒ψ \mid φ\oplus ψ \mid ⊤^\oplus\mid p\)
+                <p>and we extend satisfaction (skipping classical connectives \(⊤,⊥,∧, ⇒\)):</p>
                 <table> <tr>
-                    <td><math>S ⊨ φ\oplusψ</math></td><td style="padding:0 1em 0 1em"> iff </td><td><math> S=T∪R</math> where <math>T ⊨ φ, R ⊨ ψ</math></td>
+                    <td>\(S ⊨ φ\oplusψ\)</td><td style="padding:0 1em 0 1em"> iff </td><td>\( S=T∪R\) where \(T ⊨ φ, R ⊨ ψ\)</td>
                 </tr><tr>
-                    <td><math>S ⊨ ⊤^\oplus</math></td><td style="padding:0 1em 0 1em"> iff </td><td><math> S=\varnothing</math></td>
+                    <td>\(S ⊨ ⊤^\oplus\)</td><td style="padding:0 1em 0 1em"> iff </td><td>\( S=\varnothing\)</td>
                 </tr><tr>
                 </tr>
                 </table>
@@ -124,39 +124,39 @@
                 <p>Observe:</p>
             </razzle-slide>
             <razzle-slide>
-                    <math>S ⊨ φ\oplus ⊤^\oplus</math> just in case <math>S ⊨ φ</math>.
+                    \(S ⊨ φ\oplus ⊤^\oplus\) just in case \(S ⊨ φ\).
             </razzle-slide>
             <razzle-slide>
-                <math>⟨Q⟩C⟨⊤^\oplus⟩</math> just in case <math>⟦C⟧^\dagger(Q) = \varnothing</math>
+                \(⟨Q⟩C⟨⊤^\oplus⟩\) just in case \(⟦C⟧^\dagger(Q) = \varnothing\)
             </razzle-slide>
             <razzle-slide>
-                <math>⟨φ⟩C⟨⊥⟩</math> just in case <math>∀S, S\nvDash φ </math>
+                \(⟨φ⟩C⟨⊥⟩\) just in case \(∀S, S\nvDash φ \)
             </razzle-slide>
             <razzle-slide>
-                <p> <math>⟨φ⟩C⟨ψ∨⊤^\oplus⟩</math> expresses partial
+                <p> \(⟨φ⟩C⟨ψ∨⊤^\oplus⟩\) expresses partial
                 correctness. </p>
                 <p>Holds just in case given a set of states
-                satisfying <math>φ</math>, <math>⟦C⟧^\dagger</math> produces
-                either a set of states satisfying <math>ψ</math>, or the empty
+                satisfying \(φ\), \(⟦C⟧^\dagger\) produces
+                either a set of states satisfying \(ψ\), or the empty
                 set. </p>
             </razzle-slide>
             <razzle-slide>
-                <p> <math>⟨φ⟩C⟨p\oplus
-                ⊤⟩</math> expresses under-approximation.</p><p> holds just in
-                case every set of states satisfying <math>φ</math>
-                contains some member that <math>⟦C⟧</math> sends to
-                a state contained in <math>v(p)</math>.</p>
+                <p> \(⟨φ⟩C⟨p\oplus
+                ⊤⟩\) expresses under-approximation.</p><p> holds just in
+                case every set of states satisfying \(φ\)
+                contains some member that \(⟦C⟧\) sends to
+                a state contained in \(v(p)\).</p>
             </razzle-slide>
             <razzle-slide>We also build a command language, but we'll skip that</razzle-slide>
             <razzle-slide>
                 <p>We get a lot of expressive power.</p>
                 <ol>
-                    <li>Hoare Triples: <math>\{p\}C\{q\}</math> iff <math>⟨p⟩C⟨q∨⊤^\oplus⟩</math></li>
-                    <li>Heisenbugs: <math>⟨φ⟩C⟨\mathsf{err}\oplus ⊤⟩</math></li>
-                    <li>Fair Shuffle: <math>⟨φ⟩C⟨p\oplus q\oplus r …⟩</math></li>
+                    <li>Hoare Triples: \(\{p\}C\{q\}\) iff \(⟨p⟩C⟨q∨⊤^\oplus⟩\)</li>
+                    <li>Heisenbugs: \(⟨φ⟩C⟨\mathsf{err}\oplus ⊤⟩\)</li>
+                    <li>Fair Shuffle: \(⟨φ⟩C⟨p\oplus q\oplus r …⟩\)</li>
                 </ol>
-                <p>Given a concrete <math>Σ</math>, concrete command language generating 
-                <math>C</math>, and concrete atoms <math>p</math>, you can
+                <p>Given a concrete \(Σ\), concrete command language generating 
+                \(C\), and concrete atoms \(p\), you can
                 equip OL with a sound proof system to reason about the above.
                 </p>
                 <p>
@@ -167,31 +167,31 @@
             <razzle-slide>
                 <p>Corollary to big theorem: </p>
                 <p><em>Nondeterministic OL can falsify HL triples</em></p>
-                <p>we have <math>\nvDash\{p\}C\{q\}</math> just in case for some <math>φ⇒p</math> where <math>φ</math> is satisfiable, <math>⟨φ⟩C⟨\bar{q}\oplus ⊤⟩</math></p>
-                <p>Or anyway, this holds if <math>C</math> is guaranteed to terminate.</p>
+                <p>we have \(\nvDash\{p\}C\{q\}\) just in case for some \(φ⇒p\) where \(φ\) is satisfiable, \(⟨φ⟩C⟨\bar{q}\oplus ⊤⟩\)</p>
+                <p>Or anyway, this holds if \(C\) is guaranteed to terminate.</p>
 
             </razzle-slide>
             <razzle-slide>
                 <h3>Generalizing</h3>
-                <p> What is <math>⟦C⟧^\dagger</math>?</p>
-                <p> Intuitively, <math>⟦C⟧ : Σ → 𝒫(Σ)</math></p>
-                <p> But, <math>⟦C⟧^\dagger : 𝒫(Σ) → 𝒫(Σ)</math></p>
+                <p> What is \(⟦C⟧^\dagger\)?</p>
+                <p> Intuitively, \(⟦C⟧ : Σ → 𝒫(Σ)\)</p>
+                <p> But, \(⟦C⟧^\dagger : 𝒫(Σ) → 𝒫(Σ)\)</p>
                 <p> So you do the obvious thing:</p>
-                <p><math>⟦C⟧^\dagger(X) := \bigcup\{⟦C⟧(x) | x ∈ X\}</math></p>
+                <p>\(⟦C⟧^\dagger(X) := \bigcup\{⟦C⟧(x) | x ∈ X\}\)</p>
                 <p>which is really a completely general construction:</p>
-                <p><math>\mathsf{bind}:𝒫(A)→(A→𝒫(B))→𝒫(B)</math></p>
+                <p>\(\mathsf{bind}:𝒫(A)→(A→𝒫(B))→𝒫(B)\)</p>
             </razzle-slide>
             <razzle-slide>
-                <p>It turns out that this <math>\mathsf{bind}</math>, along with the singleton constructor for <math>\mathsf{unit}:A→𝒫(A)</math>, make <math>𝒫</math> a monad.</p>
-                <p>It also has a little bit of extra structure: <math>∪</math> and <math>\varnothing</math> make <math>𝒫(X)</math> a commutative monoid, for any <math>X</math>.</p>
+                <p>It turns out that this \(\mathsf{bind}\), along with the singleton constructor for \(\mathsf{unit}:A→𝒫(A)\), make \(𝒫\) a monad.</p>
+                <p>It also has a little bit of extra structure: \(∪\) and \(\varnothing\) make \(𝒫(X)\) a commutative monoid, for any \(X\).</p>
             </razzle-slide>
             <razzle-slide>
                 <p>So, callback to earlier:</p>
-                <p>An execution model is a triple <math>⟨M,⬦,\mathbf{1}⟩</math>, where <math>M</math> is a Monad, and <math>⬦,\mathbf{1}</math> are the multiplication and unit providing a (partial, commutative) monoid structure on every <math>M(X)</math>
+                <p>An execution model is a triple \(⟨M,⬦,\mathbf{1}⟩\), where \(M\) is a Monad, and \(⬦,\mathbf{1}\) are the multiplication and unit providing a (partial, commutative) monoid structure on every \(M(X)\)
                 </p>
             </razzle-slide>
             <razzle-slide>
-                <p>Outcome logic can be made parametric on a choice of monad, <math>M</math>, monoid structure on each <math>M(X)</math>, and clause for <math>⊨p</math></p>
+                <p>Outcome logic can be made parametric on a choice of monad, \(M\), monoid structure on each \(M(X)\), and clause for \(⊨p\)</p>
                 <p>The cash value of that fact is that:
                 <ol>
                     <li>You get a principled way of generalizing the semantics
@@ -207,18 +207,18 @@
                 </ol>
             </razzle-slide>
             <razzle-slide>
-                <p>For example, given error states <math>E</math>, the error
-                monad is given by <math>\mathsf{Er}_E(X) = E+X</math>, with
-                <math>\mathsf{bind}_E</math> propagating error states, and <math>\mathsf{unit}_E</math> just the right-hand inclusion.
+                <p>For example, given error states \(E\), the error
+                monad is given by \(\mathsf{Er}_E(X) = E+X\), with
+                \(\mathsf{bind}_E\) propagating error states, and \(\mathsf{unit}_E\) just the right-hand inclusion.
                 </p>
-                <p><math>\mathsf{Er}_E</math> has the following nice property: there's a uniform way to
-                give <math>M \circ \mathsf{Er}_E</math> a monad structure, for
-                any monad <math>M</math>.
+                <p>\(\mathsf{Er}_E\) has the following nice property: there's a uniform way to
+                give \(M \circ \mathsf{Er}_E\) a monad structure, for
+                any monad \(M\).
                 </p>
             </razzle-slide>
             <razzle-slide>
                 <p>
-                So, if <math>⟨M,⬦,\mathbf{1}⟩</math> is an execution model, so is <math>⟨M\circ \mathsf{Er}_E,⬦,\mathbf{1}⟩</math>. 
+                So, if \(⟨M,⬦,\mathbf{1}⟩\) is an execution model, so is \(⟨M\circ \mathsf{Er}_E,⬦,\mathbf{1}⟩\). 
                 </p><p>In particular, we get an execution model for non-determinism with errors, which the authors use for non-deterministic separation logic.
                 <p>
             </razzle-slide>
