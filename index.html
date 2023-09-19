@@ -13,214 +13,307 @@
     <body>
         <razzle-deck>
             <razzle-slide>
-                <h1>Outcome Logic</h1>
+                <h1>TLA+</h1>
                 <blockquote>
-                    <p> a novel generalization of Hoare Logic that is both monadic (to capture computational effects) and monoidal (to reason about outcomes and reachability).
-                    </p>
-                    <p>OL expresses true positive bugs, while retaining correctness reasoning abilities as well.</p>
+                    <p> a high-level language for modeling programs and
+                    systems—especially concurrent and distributed ones.</p>
+                    <p>It's based on the idea that the best way to describe
+                    things precisely is with simple mathematics.  TLA+ and its
+                    tools are useful for eliminating fundamental design errors,
+                    which are hard to find and expensive to correct in code.</p>
                 </blockquote>
             </razzle-slide>
             <razzle-slide>
-                <h3>Motivating example: non-determinism</h3>
-                <p>If \(Σ\) are some states, \(⟦C⟧:Σ→ 𝒫(Σ)\) is the action of the non-deterministic program \(C\) on those states, and \(σ,τ : Σ\) and \(P,Q⊆Σ\) then:
-                <dl>
-                    <dt>Hoare Logic:</dt>
-                    <dd style="padding-top:1em">\(⊨ \{P\}C\{Q\}\) 
-                        <span style="padding-left:1em;padding-right:1em;">iff</span>
-                        \(∀σ∈P, ∀τ∈ ⟦C⟧(σ), τ ∈ Q\)
-                    </dd>
-                    <dt style="padding-top:1em">Incorrectness Logic:</dt>
-                    <dd style="padding-top:1em">\(⊨ [P]C[Q]\) 
-                        <span style="padding-left:1em;padding-right:1em;">iff</span>
-                        \(∀τ∈Q, ∃σ ∈ P, τ ∈ ⟦C⟧(σ)\)
-                    </dd>
-                </dl>
+                <h2>What is it?</h2>
             </razzle-slide>
             <razzle-slide>
-               <h3>Hoare Logic:</h3>
-               <svg viewBox="0 0 400 250">
-                   <path d="M50 50 V 200" stroke="black" stroke-width="3" fill="none" />
-                   <foreignObject x="20" y="105">\(P\)</foreignObject>
-                   <path d="M300 10 V 250" stroke="black" stroke-width="3" fill="none" />
-                   <foreignObject x="310" y="105">\(Q\)</foreignObject>
-                   <path d="M275 50 V 200" stroke-dasharray="5" stroke="black" stroke-width="3" fill="none" />
-                   <foreignObject x="150" y="105">\(⟦C⟧^\dagger(P)\)</foreignObject>
-                   <path d="M50 50 L255 50" stroke-dasharray="5" stroke="black" stroke-width="1" fill="none" marker-end="url(#arrowhead)"/>
-                   <path d="M50 200 L255 200" stroke-dasharray="5" stroke="black" stroke-width="1" fill="none"marker-end="url(#arrowhead)"/>
-               </svg>
-               <p>Postcondition \(Q\) “over-approximates” \(⟦C⟧^\dagger(P)\), it's allowed to include some unreachable outcomes.</p> 
+                <h2>Fundamental idea</h2>
+                <p> We can model specify <i>behaviors</i> of
+                systems, including computer processes, through descriptions of
+                <i>actions</i> that update <i>states</i>.</p>
             </razzle-slide>
             <razzle-slide>
-               <h3>Incorrectness Logic:</h3>
-               <svg viewBox="0 0 400 250" >
-                   <path d="M50 50 V 200" stroke="black" stroke-width="3" fill="none" />
-                   <foreignObject x="20" y="105">\(P\)</foreignObject>
-                   <path d="M300 50 V 200" stroke="black" stroke-width="3" fill="none" />
-                   <foreignObject x="310" y="105">\(Q\)</foreignObject>
-                   <path d="M275 10 V 250" stroke-dasharray="5" stroke="black" stroke-width="3" fill="none" />
-                   <foreignObject x="150" y="105">\(⟦C⟧^\dagger(P)\)</foreignObject>
-                   <path d="M50 50 L255 10" stroke-dasharray="5" stroke="black" stroke-width="1" fill="none" marker-end="url(#arrowhead)"/>
-                   <path d="M50 200 L255 240" stroke-dasharray="5" stroke="black" stroke-width="1" fill="none"marker-end="url(#arrowhead)"/>
-               </svg>
-               <p>Postcondition “under-approximates” \(⟦C⟧^\dagger(P)\), it's allowed to leave out some reachable outcomes</p>
+              Assume a fixed set of variables.
+              <dl>
+                <dt>States:</dt>
+                <dd>Assignments of values to variables</dd>
+                <dt>Behaviors:</dt>
+                <dd>Infinite discrete sequences of states, with a starting
+                  point, like: s₁, s₂, s₃, …
+                </dd>
+              </dl>
+              Behaviors are naturally ordered by “tail of” relation, so 
+              s₁, s₂, s₃, … is immediately followed by s₂, s₃, s₄ …
             </razzle-slide>
             <razzle-slide>
-                <p>Both HL and IL combine two difference sources of outcome multiplicity:</p>
-                <ul>
-                    <li>Number of states in the precondition</li>
-                    <li>Nondeterministic branching</li>
-                </ul><p>
-                As a result, some kinds of incorrectness and incorrectness are hard to describe</p>
+              <dl>
+                <dt>Actions:</dt>
+                <dd>Boolean valued expression, expressing relation between the
+                  values of variables in two states, intuitively the current and next state.
+              </dl>
             </razzle-slide>
             <razzle-slide>
-                <p>Heisenbugs: “Every state in the precondition can (sometimes, nondeterministically) produce an error”</p>
-                <p>Correct Shuffles: “Each of several postconditions is (sometimes, nondeterministically) reachable from every state in the precondition”</p>
-                <p>Manifest Errors (Le et al.): “Executing \(C\) on any state terminates erroniously in some state satisfying…”</p>
+              <h4>Examples of actions:</h4>
+              <ul>
+                <li><code>x' = x + 1</code></li>
+                <li><code>x = x' + 1</code></li>
+                <li><code>x = y' ∧ y = x'</code></li>
+              </ul>
+              <p>NB: for some reason, “=” is a boolean operator and “≜” is
+              definitional equality. Assignment would correspond to an action.
+              </p>
             </razzle-slide>
             <razzle-slide>
-                <h3>Idea for a solution:</h3>
-                <p>look at properties of the sets \(⟦C⟧(x)\) for \(x∈ P\), or actually more generally, \(⟦C⟧^\dagger(X)\) for \(X \subseteq P\).</p>
-                <p>A Heisenbug means that \(⟦C⟧^\dagger(X)\) overlaps error, for any choice of \(X\subseteq P\).<p>
-                <p>A fair shuffle means that \(⟦C⟧^\dagger(X)\) covers your shuffle outcomes, for any choice of \(X\subseteq P\).</p>
+              <h4> The Temporal Logic of Actions</h3>
+              <p>TLA is a language that can be used to write statements that
+                could be true or false within (at the starting point of)
+                behaviors.
+              </p>
             </razzle-slide>
             <razzle-slide>
-                <dl>
-                    <dt>Generic Outcome Logic:</dt>
-                    <dd style="padding-top:1em">\(⊨ ⟨φ⟩C⟨ψ⟩\) 
-                        <span style="padding-left:1em;padding-right:1em;">iff</span>
-                        \(∀S⊨φ,\qquad ⟦C⟧^\dagger(S) ⊨ ψ\)
-                    </dd>
-                </dl>
-                <p>Because we're interested in properties of
-                \(⟦C⟧^\dagger(X)\), we need to promote \(⊨\)
-                from a relation between states and assertions to a relation
-                between <em>sets of states</em> and assertions.</p>
-            </razzle-slide>
-            <razzle-slide>
-                <p>To do this (and get the nondeterministic outcome logic from the paper) we supply:</p>
+                <p>Intuitively:</p>
                 <ol>
-                    <li>An execution model: basically \(𝒫,∪,\varnothing\) (details postponed).</li> 
-                    <li>Atomic commands \(Σ→𝒫(Σ)\).</li>
-                    <li>Atomic assertions \(\mathsf{Prop}\), and an
-                        atomic satisfaction relation, in this case:<br>
-                        \(S ⊨ p\) iff \(S ≠ \varnothing\) and \(∀σ∈S, σ ∈ v(p)\).
+                    <li> “All (non-trivial) transitions conform to this action”: 
                     </li>
+                    <li> “This action could occur”</li>
+                    <li> “If this action eventually always could occur, it eventually does”</li>
                 </ol>
             </razzle-slide>
             <razzle-slide>
-                Given our atomic assertions, we build an assertion language as follows:
+              <p>One nuance. TLA is designed to ensure that behaviors always are
+                allowed to “stutter”, i.e. fail to update anything. There seem to
+                be at least two reasons for this.
+              </p>
+            </razzle-slide>
+            <razzle-slide>
+              <p> Stuttering is supposed to be more realistic.
+              </p>
+            </razzle-slide>
+            <razzle-slide>
+              <p> If behaviors can stutter, then “implementation is implication”
+              </p>
+              <p> For example, a spec for a clock with an hour hand and
+                a minute hand will be implied by a spec for a clock with an
+                hour, minute, and second hand, in the sense that every behavior
+                satisfying the second spec satisfies the first.
+              </p>
+              <p> The idea is to ensure that you can leave out temporal detail
+              in higher-level specifications, and then add it in without
+              needing to backtrack.</p>
+            </razzle-slide>
+            <razzle-slide>
+              <p> Some formal results here, Lamport/Cohen reduction theorem. </p>
+            </razzle-slide>
+            <razzle-slide>
+              <pre>
+Predicate ≜ Action with no primed variables
+          | ENABLED Action
+
+Form ≜ Predicate   | □[Action]ₜ | ¬Form 
+     | Form ∧ Form | □Form
+              </pre>
+              <p>Where:</p>
+              <ul>
+              <li>□ means “always”, in every subsequent behavior</li>
+              <li><code>[Φ]ₜ</code> abbreviates <code>Φ ∨ t'=t</code></li>
+              </ul>
+            </razzle-slide>
+            <razzle-slide>
+              <p>TLA+ extends the above (simple TLA) by adding general
+                quantification, sets, and specific operators for use in
+                actions.
+              </p>
+            </razzle-slide>
+            <razzle-slide>
+                <h2>How do you use it?</h2>
+            </razzle-slide>
+            <razzle-slide>
+                <p>The main tool for using TLA+ is the <code>tlc</code> model checker.
+                <p>Given a sufficiently descriptive statement in TLA+,
+                <code>tlc</code> can attempt to generate a representation of
+                all possible behaviors that conform to that statement.</p>
+                <p> The representation (I think) is called a model</p>
+            </razzle-slide>
+            <razzle-slide>
+                <p>“Sufficiently descriptive” means basically that the
+                statement gives an initial assignment to each declared
+                variable, and gives an update relation that pins down how state
+                changes.
                 </p>
-                \(φ::= ⊤ \mid ⊥ \mid φ∧ψ \mid φ⇒ψ \mid φ\oplus ψ \mid ⊤^\oplus\mid p\)
-                <p>and we extend satisfaction (skipping classical connectives \(⊤,⊥,∧, ⇒\)):</p>
-                <table> <tr>
-                    <td>\(S ⊨ φ\oplusψ\)</td><td style="padding:0 1em 0 1em"> iff </td><td>\( S=T∪R\) where \(T ⊨ φ, R ⊨ ψ\)</td>
-                </tr><tr>
-                    <td>\(S ⊨ ⊤^\oplus\)</td><td style="padding:0 1em 0 1em"> iff </td><td>\( S=\varnothing\)</td>
-                </tr><tr>
-                </tr>
-                </table>
             </razzle-slide>
             <razzle-slide>
-                <p>Observe:</p>
-            </razzle-slide>
-            <razzle-slide>
-                    \(S ⊨ φ\oplus ⊤^\oplus\) just in case \(S ⊨ φ\).
-            </razzle-slide>
-            <razzle-slide>
-                \(⟨Q⟩C⟨⊤^\oplus⟩\) just in case \(⟦C⟧^\dagger(Q) = \varnothing\)
-            </razzle-slide>
-            <razzle-slide>
-                \(⟨φ⟩C⟨⊥⟩\) just in case \(∀S, S\nvDash φ \)
-            </razzle-slide>
-            <razzle-slide>
-                <p> \(⟨φ⟩C⟨ψ∨⊤^\oplus⟩\) expresses partial
-                correctness. </p>
-                <p>Holds just in case given a set of states
-                satisfying \(φ\), \(⟦C⟧^\dagger\) produces
-                either a set of states satisfying \(ψ\), or the empty
-                set. </p>
-            </razzle-slide>
-            <razzle-slide>
-                <p> \(⟨φ⟩C⟨p\oplus
-                ⊤⟩\) expresses under-approximation.</p><p> holds just in
-                case every set of states satisfying \(φ\)
-                contains some member that \(⟦C⟧\) sends to
-                a state contained in \(v(p)\).</p>
-            </razzle-slide>
-            <razzle-slide>We also build a command language, but we'll skip that</razzle-slide>
-            <razzle-slide>
-                <p>We get a lot of expressive power.</p>
-                <ol>
-                    <li>Hoare Triples: \(\{p\}C\{q\}\) iff \(⟨p⟩C⟨q∨⊤^\oplus⟩\)</li>
-                    <li>Heisenbugs: \(⟨φ⟩C⟨\mathsf{err}\oplus ⊤⟩\)</li>
-                    <li>Fair Shuffle: \(⟨φ⟩C⟨p\oplus q\oplus r …⟩\)</li>
-                </ol>
-                <p>Given a concrete \(Σ\), concrete command language generating 
-                \(C\), and concrete atoms \(p\), you can
-                equip OL with a sound proof system to reason about the above.
-                </p>
-                <p>
-                A complete proof system for an interesting command language is
-                impossible, because OL (like HL) can express nontermination.
-                </p>
-            </razzle-slide>
-            <razzle-slide>
-                <p>Corollary to big theorem: </p>
-                <p><em>Nondeterministic OL can falsify HL triples</em></p>
-                <p>we have \(\nvDash\{p\}C\{q\}\) just in case for some \(φ⇒p\) where \(φ\) is satisfiable, \(⟨φ⟩C⟨\bar{q}\oplus ⊤⟩\)</p>
-                <p>Or anyway, this holds if \(C\) is guaranteed to terminate.</p>
+                <h3>Example:</h3>
+                <pre>
+Init ≜ V = 0       // Nat
+     ∧ pc = "Plus" // program counter
+
+Plus ≜ pc = "Plus" ∧ pc' = "Minus" 
+     ∧ V' = V + 1
+
+Minus ≜ pc = "Minus" ∧ pc' = "Plus" 
+      ∧ V' = V - 1
+
+Next ≜ Plus ∨ Minus
+
+Spec ≜ Init ∧ □[Next]ₜ
+                </pre>
 
             </razzle-slide>
             <razzle-slide>
-                <h3>Generalizing</h3>
-                <p> What is \(⟦C⟧^\dagger\)?</p>
-                <p> Intuitively, \(⟦C⟧ : Σ → 𝒫(Σ)\)</p>
-                <p> But, \(⟦C⟧^\dagger : 𝒫(Σ) → 𝒫(Σ)\)</p>
-                <p> So you do the obvious thing:</p>
-                <p>\(⟦C⟧^\dagger(X) := \bigcup\{⟦C⟧(x) | x ∈ X\}\)</p>
-                <p>which is really a completely general construction:</p>
-                <p>\(\mathsf{bind}:𝒫(A)→(A→𝒫(B))→𝒫(B)\)</p>
+                <img style="width:25em" src="./m1.svg"></img>
             </razzle-slide>
             <razzle-slide>
-                <p>It turns out that this \(\mathsf{bind}\), along with the singleton constructor for \(\mathsf{unit}:A→𝒫(A)\), make \(𝒫\) a monad.</p>
-                <p>It also has a little bit of extra structure: \(∪\) and \(\varnothing\) make \(𝒫(X)\) a commutative monoid, for any \(X\).</p>
+              <p>
+                Models have a general graph structure; kind of like automata,
+                with behaviors corresponding to automata runs.
+              </p>
             </razzle-slide>
             <razzle-slide>
-                <p>So, callback to earlier:</p>
-                <p>An execution model is a triple \(⟨M,⬦,\mathbf{1}⟩\), where \(M\) is a Monad, and \(⬦,\mathbf{1}\) are the multiplication and unit providing a (partial, commutative) monoid structure on every \(M(X)\)
-                </p>
-            </razzle-slide>
-            <razzle-slide>
-                <p>Outcome logic can be made parametric on a choice of monad, \(M\), monoid structure on each \(M(X)\), and clause for \(⊨p\)</p>
-                <p>The cash value of that fact is that:
+                <code>tlc</code> can also do some extra checks on the model:
                 <ol>
-                    <li>You get a principled way of generalizing the semantics
-                        to other monads where you can find a reasonable monoid
-                        structure.<br>
-                        (paper example: probabilisitic programming).
-                    </li>
-                    <li>You get a principled way of <em>composing</em>
-                        semantics, since you can often layer different monads
-                        together to generate new monads.<br>
-                        (paper example: “Outcome-based separation logic”).
-                    </li>
+                    <li> Invariants: make sure some predicate is true in every state</li>
+                    <li> Liveness properties: statements that are true somewhere in any behavior.</li>
+                    <li> More: e.g. “if φ is always true, then so is ψ.”</li>
+                </ol>
+                Basically check any TLA+ formula, abort if violation found.
+            </razzle-slide>
+            <razzle-slide>
+                <p>The TLA+ language is pretty simple.</p>
+                <p> But if you want to model algorithms, writing in pure TLA+
+                still introduces a layer of indirection.</p>
+            </razzle-slide>
+            <razzle-slide>
+                <p>One possible solution is to use a DSL for representing an
+                algorithm, and then automatically translate to TLA+.</p>
+            </razzle-slide>
+            <razzle-slide>
+                <h3>PlusCal:</h3>
+<pre>
+variable seq = <<1, 2, 3, 2>>;
+index = 1;
+seen = {};
+is_unique = TRUE;
+
+begin
+  TheMainLoop:
+    while index <= Len(seq) do
+      if seq[index] \notin seen then
+        seen := seen \union {seq[index]};
+      else
+        is_unique := FALSE;
+      end if;
+      index := index + 1;
+    end while;
+end algorithm;
+</pre>
+            </razzle-slide>
+            <razzle-slide>
+                <h3>PlusCal:</h3>
+<pre>
+variable seq = <<1, 2, 3, 2>>;
+index = 1;
+seen = {};
+is_unique = TRUE;
+
+begin
+  <span style="color:red">TheMainLoop:</span>
+    while index <= Len(seq) do
+      if seq[index] \notin seen then
+        seen := seen \union {seq[index]};
+      else
+        is_unique := FALSE;
+      end if;
+      index := index + 1;
+    end while;
+end algorithm;
+</pre>
+            </razzle-slide>
+            <razzle-slide>
+                <h2>Is it any good?</h2>
+            </razzle-slide>
+            <razzle-slide>
+                <h2>The Good:</h2>
+                <ol>
+                    <li>Very expressive.</li>
+                    <li>Learnable.</li>
+                    <li>Some neat case studies of industrial applications: <a href="https://lamport.azurewebsites.net/tla/industrial-use.html">https://lamport.azurewebsites.net/tla/industrial-use.html</a>: Intel, Amazon, Microsoft, NASA, OpenComRTOS.</li>
+                    <li>Use might be growing. In April 2023, AWS, Microsoft,
+                        and Oracle became founding members of the TLA+
+                        Foundation, launched by the Linux Foundation. The TLA+ Foundation
+                        will “promote adoption, provide education and training
+                        resources, fund research, develop tools, and build
+                        a community of TLA+ practitioners.” Also functions as
+                        a language committee</li>
                 </ol>
             </razzle-slide>
             <razzle-slide>
-                <p>For example, given error states \(E\), the error
-                monad is given by \(\mathsf{Er}_E(X) = E+X\), with
-                \(\mathsf{bind}_E\) propagating error states, and \(\mathsf{unit}_E\) just the right-hand inclusion.
-                </p>
-                <p>\(\mathsf{Er}_E\) has the following nice property: there's a uniform way to
-                give \(M \circ \mathsf{Er}_E\) a monad structure, for
-                any monad \(M\).
-                </p>
+                <h3>The Bad:</h3>
+                <ol>
+                    <li>Only concrete models (symbolic model checker, apalache, seems immature). State explosion.</li>
+                    <li><s>No spec ↔ implementation automation. A few academic
+                      experiments (e.g. C2TLA+) translating PlusCal to and from
+                      C.</s> Actually, there's PGo, which can translate PlusCal
+                      to Go.
+                    </li>
+                    <li>No type system (by design), no pattern matching… Awkward recursion.</li>
+                </ol>
             </razzle-slide>
             <razzle-slide>
-                <p>
-                So, if \(⟨M,⬦,\mathbf{1}⟩\) is an execution model, so is \(⟨M\circ \mathsf{Er}_E,⬦,\mathbf{1}⟩\). 
-                </p><p>In particular, we get an execution model for non-determinism with errors, which the authors use for non-deterministic separation logic.
-                <p>
+                <h3>The Ugly:</h3>
+                <ol>
+                    <li>TLA-toolbox (main TLA+ IDE) is not great.</li>
+                    <li>Support for modern editors is limited. There's a VSCode
+                        plugin, and syntax highlighting for other editors, but
+                        that's about it.</li>
+                    <li>TLAPs, proof system for TLA+, is not particularly well
+                        documented (defunct "hyperbook", some video lectures).
+                        I don't know if it's used.</li>
+                </ol>
+            </razzle-slide>
+            <razzle-slide>
+                <h2>What did <em>you</em> do with it?</h2>
+            </razzle-slide>
+            <razzle-slide>
+                <p>I tried out comparing two algorithms in TLA+.</p>
+            </razzle-slide>
+            <razzle-slide>
+                <p>Basic Method:</p>
+                <ol>
+                    <li>Write both algorithms in pluscal</li>
+                    <li>Translate to TLA+</li>
+                    <li>Merge (by hand) the two resultant specifications, so
+                        that the update relation updates state for both.</li>
+                </ol>
+            </razzle-slide>
+            <razzle-slide>
+              Problem: Stuttering.
+            </razzle-slide>
+            <razzle-slide>
+              <ol>
+                  <li>Add some checkpoints, where one algorithm will pause and wait for the other to catch up</li>
+                  <li>Write invariants that say certain parts of the state are the same, when the algorithms are in sync.</li>
+              </ol>
+            </razzle-slide>
+            <razzle-slide>
+              <p>Basically works, probably wasn't a great idea.</p>
+              <p>I think the main kind of algorithm comparison that TLA+ is
+              intended for is <i>refinement</i>.
+              </p>
+            </razzle-slide>
+            <razzle-slide>
+              <blockquote>
+                One develops a program through a series of refinements,
+                starting from a high-level algorithm and eventually reaching
+                a low-level program. Just as we went from Program 1 to the
+                finier-grained Program 2… the entire process from specification
+                to C code could in principle be carried out in TLA. “All” we
+                would need is a precise semantics of C, which would allow the
+                translation of any C program into a TLA formula.
+              </blockquote>
+            </razzle-slide>
+            <razzle-slide>
+              The ideal, I think, is refinement-driven-development, not
+              verification of existing software.
             </razzle-slide>
         </razzle-deck>
     </body>
